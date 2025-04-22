@@ -1,129 +1,547 @@
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Bennett Stouffer - Resume</title>
-              <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-              <style>
-                  /* Custom CSS for additional styling */
-                  body {
-                      font-family: 'Open Sans', sans-serif;
-                  }
 
-                  a:hover {
-                      text-decoration: underline;
-                  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bennett Stouffer - Resume</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/personalsite/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom CSS for additional styling */
+        :root {
+            --primary-color: #bd5d38;
+            --background-color: #f8f9fa;
+            --text-color: #212529;
+            --header-bg: #343a40;
+            --header-text: #ffffff;
+            --card-bg: #ffffff;
+            --timeline-line: #dee2e6;
+            --timeline-dot: #bd5d38;
+            --transition-speed: 0.3s;
+        }
 
-                  .experience-list, .education-list {
-                      list-style-type: square;
-                  }
-              </style>
-          </head>
-          <body class="font-sans bg-gray-100">
-              <header class="bg-gray-800 text-white fixed top-0 left-0 w-full z-10">
-                  <nav class="container mx-auto flex justify-between p-4">
-                      <div class="font-bold">Bennett Stouffer</div>
-                      <div>
-                          <a href="#about" class="px-4 hover:underline">About</a>
-                          <a href="#skills" class="px-4 hover:underline">Skills</a>
-                          <a href="#experience" class="px-4 hover:underline">Experience</a>
-                          <a href="#education" class="px-4 hover:underline">Education</a>
-                          <a href="#projects" class="px-4 hover:underline">Projects</a>
-                          <a href="#contact" class="px-4 hover:underline">Contact</a>
-                      </div>
-                  </nav>
-              </header>
+        /* Dark mode variables */
+        .dark-mode {
+            --background-color: #121212;
+            --text-color: #f0f0f0;
+            --header-bg: #1a1a1a;
+            --header-text: #f0f0f0;
+            --card-bg: #1e1e1e;
+            --timeline-line: #bd5d38;
+            --text-muted: #d0d0d0;
+        }
 
-              <main class="pt-16">
-                  <section id="about" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">About Me</h2>
-                      <p>I am Bennett Stouffer, a dedicated and skilled professional with a passion for design, engineering, and technology. With expertise in design tools, practical skills, and programming languages, I excel in creating innovative solutions and enhancing efficiency in the engineering domain.</p>
-                  </section>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
 
-                  <section id="skills" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">Skills</h2>
-                      <p><strong>Design Tools:</strong> Fusion 360, Inventor, PTC Creo, Solidworks, Cura, Photoshop, Affinity Suite</p>
-                      <p><strong>Practical Skills:</strong> Automation (Industrial and Software), 3D Printing, Electronics Design and Fabrication, Machining (Manual and CNC)</p>
-                      <p><strong>Languages:</strong> Python, C#</p>
-                  </section>
+        /* Hero animation */
+        .hero-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300vh;
+            background: linear-gradient(to bottom, 
+                rgba(189, 93, 56, 0.08) 0%, 
+                rgba(189, 93, 56, 0.05) 40%, 
+                rgba(189, 93, 56, 0.03) 60%, 
+                rgba(189, 93, 56, 0.01) 80%, 
+                rgba(189, 93, 56, 0) 100%);
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
 
-                  <section id="experience" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">Experience</h2>
-                      <div class="mb-6">
-                          <h3 class="text-xl font-semibold">Design and Manufacturing Engineer, Systemair – Lenexa, KS</h3>
-                          <p class="text-gray-600">Sept 2021 – Present</p>
-                          <ul class="list-disc ml-8">
-                              <li>Automated a tedious and dangerous workcell with a six axis robot, allowing for runs of thousands of parts with minimal human interaction.</li>
-                              <li>Implemented a new end-of-line tester, which fully automated the test process, protected operators from 1500V shocks, and with the new level of precision catches future returns.</li>
-                              <li>Led the addition of two new product families to our facility, including revamping the CAD and drawings, along with full prototyping and pilot runs, with successful handoffs to production.</li>
-                              <li>Programmed helper programs in Python to automate repetitive tasks that were tedious or easy to blunder.</li>
-                              <li>Performed wind tunnel performance testing of 30+ fans, including analysis and recommending design change for underperforming fans.</li>
-                              <li>Routinely led firefighting efforts out on the line, troubleshooting problems, interpreting drawings, and calibrating test equipment.</li>
-                          </ul>
-                      </div>
-                      <div class="mb-6">
-                          <h3 class="text-xl font-semibold">Mechanical Engineer II, Black and Veatch – Overland Park, KS</h3>
-                          <p class="text-gray-600">May 2018 – Sept 2021</p>
-                          <ul class="list-disc ml-8">
-                              <li>Contributed to the design process for military and intelligence installations.</li>
-                              <li>Generated HVAC, chilled water, and plumbing calculations and drawings.</li>
-                              <li>Helped develop specifications for projects alongside senior mechanical engineers.</li>
-                              <li>Worked cross discipline with electrical, civil, and architectural engineers.</li>
-                              <li>Worked with vendors to size and select equipment.</li>
-                          </ul>
-                      </div>
-                      <div class="mb-6">
-                          <h3 class="text-xl font-semibold">Product Design Intern, Cummins Inc. – Minneapolis, MN</h3>
-                          <p class="text-gray-600">May 2017 – Aug 2017</p>
-                          <ul class="list-disc ml-8">
-                              <li>Led the endurance testing for a RV Engine Generator.</li>
-                              <li>Assisted in testing and design decisions.</li>
-                              <li>Shadowed senior engineers throughout the design process.</li>
-                          </ul>
-                      </div>
-                  </section>
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            width: 300%;
+            height: 300%;
+            top: -100%;
+            left: -100%;
+            background: radial-gradient(
+                circle at center, 
+                rgba(189, 93, 56, 0.15) 0%, 
+                rgba(189, 93, 56, 0.1) 30%, 
+                rgba(189, 93, 56, 0.05) 60%, 
+                rgba(189, 93, 56, 0) 100%
+            );
+            animation: pulse 15s ease-in-out infinite;
+        }
 
-                  <section id="education" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">Education</h2>
-                      <p>Cedarville University – Bachelor of Science in Mechanical Engineering, May 2019</p>
-                  </section>
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 0.5; }
+        }
 
-                  <section id="projects" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">Projects</h2>
-                      <div class="mb-6">
-                          <h3 class="text-xl font-semibold">Corn Maze Rake</h3>
-                          <p>Designed a pull behind rake for a skid steer loader to knock down dirt piles generated by the tracks while turning. Utilized back of the napkin calculations and drawings to then work with a welder to make a finished product.</p>
-                      </div>
-                      <div class="mb-6">
-                          <h3 class="text-xl font-semibold">Amateur Game Design</h3>
-                          <p>Design, prototype, and program basic software and board games in my free time to hone my programming skills and keep the creative juices flowing.</p>
-                      </div>
-                  </section>
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-                  <section id="contact" class="container mx-auto my-8">
-                      <h2 class="text-3xl font-bold mb-4">Contact</h2>
-                      <p>Email: <a href="mailto:bennettstouffer@gmail.com" class="text-blue-500 hover:underline">bennettstouffer@gmail.com</a></p>
-                    <p>Phone: <a href="tel:+18165728930" class="text-blue-500 hover:underline">816-572-8930</a></p>
-                            </section>
-                        </main>
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
 
-                        <footer class="bg-gray-800 text-white text-center p-4 mt-8">
-                            © Bennett Stouffer. All rights reserved.
-                        </footer>
+        /* Timeline styling */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                // Smooth scrolling for anchor links
-                                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                                    anchor.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        document.querySelector(this.getAttribute('href')).scrollIntoView({
-                                            behavior: 'smooth'
-                                        });
-                                    });
-                                });
-                            });
-                        </script>
-                    </body>
-                    </html>
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--timeline-line);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--timeline-dot);
+            border: 2px solid var(--background-color);
+            transition: transform 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            transform: scale(1.2);
+        }
+
+        /* Micro-interactions */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        /* Company logo styling */
+        .company-logo {
+            max-width: 100px;
+            max-height: 50px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 4px;
+            margin-right: 1rem;
+            background-color: white;
+            padding: 0.5rem;
+        }
+        
+        /* Specific logo adjustments */
+        .logo-cedarville {
+            max-width: 120px;
+            max-height: 60px;
+        }
+        
+        .logo-systemair {
+            max-width: 130px;
+            max-height: 40px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #666;
+            font-size: 1.5rem;
+        }
+        
+        .dark-mode .logo-placeholder {
+            background-color: #333;
+            color: #aaa;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        a {
+            transition: color var(--transition-speed);
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .hover\:text-primary-color:hover {
+            color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+        }
+        
+        .dark-mode .text-gray-600 {
+            color: var(--text-muted);
+        }
+        
+        .dark-mode .card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dark-mode .card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        .dark-mode ul.list-disc li {
+            color: var(--text-color);
+        }
+
+        .btn:hover {
+            background-color: #a04e2f;
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            transition: background-color var(--transition-speed);
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="hero-bg"></div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+    <header class="fixed top-0 left-0 w-full z-10" style="background-color: var(--header-bg); color: var(--header-text);">
+        <nav class="container mx-auto flex justify-between p-4">
+            <div class="font-bold">Bennett Stouffer</div>
+            <div>
+                <a href="#about" class="px-4 hover:underline">About</a>
+                <a href="#skills" class="px-4 hover:underline">Skills</a>
+                <a href="#experience" class="px-4 hover:underline">Experience</a>
+                <a href="#education" class="px-4 hover:underline">Education</a>
+                <a href="#projects" class="px-4 hover:underline">Projects</a>
+                <a href="#contact" class="px-4 hover:underline">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-16">
+        <section id="about" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">About Me</h2>
+            <p>I am Bennett Stouffer, a dedicated and skilled professional with a passion for design, engineering, and technology. With expertise in design tools, practical skills, and programming languages, I excel in creating innovative solutions and enhancing efficiency in the engineering domain.</p>
+        </section>
+
+        <section id="skills" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">Skills</h2>
+            <p><strong>Design Tools:</strong> Fusion 360, Inventor, PTC Creo, Solidworks, Cura, Photoshop, Affinity Suite</p>
+            <p><strong>Practical Skills:</strong> Automation (Industrial and Software), 3D Printing, Electronics Design and Fabrication, Machining (Manual and CNC)</p>
+            <p><strong>Languages:</strong> Python, C#</p>
+        </section>
+
+        <section id="experience" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="card">
+                        <div class="logo-container">
+                            <a href="https://www.systemair.com/en-us" target="_blank" rel="noopener noreferrer" title="Visit Systemair website">
+                                <img src="/static/personalsite/images/systemair-logo-vector.png" alt="Systemair logo" class="company-logo logo-systemair">
+                            </a>
+                            <div>
+                                <h3 class="text-xl font-semibold">Design and Manufacturing Engineer, <a href="https://www.systemair.com/en-us" target="_blank" rel="noopener noreferrer" class="hover:text-primary-color">Systemair</a> – Lenexa, KS</h3>
+                                <p class="text-gray-600">Sept 2021 – Present</p>
+                            </div>
+                        </div>
+                        <ul class="list-disc ml-8 mt-3">
+                            <li>Automated a tedious and dangerous workcell with a six axis robot, allowing for runs of thousands of parts with minimal human interaction.</li>
+                            <li>Implemented a new end-of-line tester, which fully automated the test process, protected operators from 1500V shocks, and with the new level of precision catches future returns.</li>
+                            <li>Led the addition of two new product families to our facility, including revamping the CAD and drawings, along with full prototyping and pilot runs, with successful handoffs to production.</li>
+                            <li>Programmed helper programs in Python to automate repetitive tasks that were tedious or easy to blunder.</li>
+                            <li>Performed wind tunnel performance testing of 30+ fans, including analysis and recommending design change for underperforming fans.</li>
+                            <li>Routinely led firefighting efforts out on the line, troubleshooting problems, interpreting drawings, and calibrating test equipment.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="card">
+                        <div class="logo-container">
+                            <a href="https://www.bv.com/en-US" target="_blank" rel="noopener noreferrer" title="Visit Black and Veatch website">
+                                <img src="/static/personalsite/images/BlackandVeatch-logo.svg" alt="Black and Veatch logo" class="company-logo">
+                            </a>
+                            <div>
+                                <h3 class="text-xl font-semibold">Mechanical Engineer II, <a href="https://www.bv.com/en-US" target="_blank" rel="noopener noreferrer" class="hover:text-primary-color">Black and Veatch</a> – Overland Park, KS</h3>
+                                <p class="text-gray-600">May 2018 – Sept 2021</p>
+                            </div>
+                        </div>
+                        <ul class="list-disc ml-8 mt-3">
+                            <li>Contributed to the design process for military and intelligence installations.</li>
+                            <li>Generated HVAC, chilled water, and plumbing calculations and drawings.</li>
+                            <li>Helped develop specifications for projects alongside senior mechanical engineers.</li>
+                            <li>Worked cross discipline with electrical, civil, and architectural engineers.</li>
+                            <li>Worked with vendors to size and select equipment.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="card">
+                        <div class="logo-container">
+                            <a href="https://www.cummins.com/" target="_blank" rel="noopener noreferrer" title="Visit Cummins website">
+                                <img src="/static/personalsite/images/Cummins-logo.png" alt="Cummins logo" class="company-logo">
+                            </a>
+                            <div>
+                                <h3 class="text-xl font-semibold">Product Design Intern, <a href="https://www.cummins.com/" target="_blank" rel="noopener noreferrer" class="hover:text-primary-color">Cummins Inc.</a> – Minneapolis, MN</h3>
+                                <p class="text-gray-600">May 2017 – Aug 2017</p>
+                            </div>
+                        </div>
+                        <ul class="list-disc ml-8 mt-3">
+                            <li>Led the endurance testing for a RV Engine Generator.</li>
+                            <li>Assisted in testing and design decisions.</li>
+                            <li>Shadowed senior engineers throughout the design process.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">Education</h2>
+            <div class="card">
+                <div class="logo-container">
+                    <a href="https://www.cedarville.edu/" target="_blank" rel="noopener noreferrer" title="Visit Cedarville University website">
+                        <img src="/static/personalsite/images/CU_mascot_lockup.jpg" alt="Cedarville University logo" class="company-logo logo-cedarville">
+                    </a>
+                    <p><a href="https://www.cedarville.edu/" target="_blank" rel="noopener noreferrer" class="hover:text-primary-color">Cedarville University</a> – Bachelor of Science in Mechanical Engineering, May 2019</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">Projects</h2>
+            <div class="card">
+                <h3 class="text-xl font-semibold">Corn Maze Rake</h3>
+                <p>Designed a pull behind rake for a skid steer loader to knock down dirt piles generated by the tracks while turning. Utilized back of the napkin calculations and drawings to then work with a welder to make a finished product.</p>
+            </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold">Amateur Game Design</h3>
+                <p>Design, prototype, and program basic software and board games in my free time to hone my programming skills and keep the creative juices flowing.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="container mx-auto my-8">
+            <h2 class="text-3xl font-bold mb-4">Contact</h2>
+            <div class="card">
+                <p>Email: <span id="email" class="text-blue-500">bennett<!-- -->stouffer<!-- -->@<!-- -->gmail<!-- -->.com</span> <button onclick="copyEmail()" class="ml-2 text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded transition-colors" title="Copy email address"><i class="fas fa-copy"></i></button></p>
+                <p>Phone: <span id="phone" class="text-blue-500">(816) <!-- -->572-<!-- -->8930</span> <button onclick="copyPhone()" class="ml-2 text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 rounded transition-colors" title="Copy phone number"><i class="fas fa-copy"></i></button></p>
+                <div class="mt-4">
+                    <button id="contactBtn" class="btn">Get In Touch</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Modal -->
+        <div id="contactModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Contact Information</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <p class="mb-2">Email: <a id="modalEmail" href="#" class="text-blue-500 hover:underline"></a></p>
+                <p class="mb-4">Phone: <a id="modalPhone" href="#" class="text-blue-500 hover:underline"></a></p>
+                <div class="flex justify-end">
+                    <button id="emailBtn" class="btn mr-2">Send Email</button>
+                    <button id="callBtn" class="btn">Call</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background-color: var(--header-bg); color: var(--header-text);" class="text-center p-4 mt-8">
+        © Bennett Stouffer. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Dark mode toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Check for saved theme preference or use the system preference
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark' || (!currentTheme && prefersDarkScheme.matches)) {
+                document.body.classList.add('dark-mode');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+            
+            // Toggle theme when button is clicked
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                
+                // Update icon
+                if (document.body.classList.contains('dark-mode')) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Animate timeline items on scroll
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            timelineItems.forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(item);
+            });
+            
+            // Contact information protection
+            const emailElement = document.getElementById('email');
+            const phoneElement = document.getElementById('phone');
+            const contactModal = document.getElementById('contactModal');
+            const contactBtn = document.getElementById('contactBtn');
+            const closeModal = document.getElementById('closeModal');
+            const modalEmail = document.getElementById('modalEmail');
+            const modalPhone = document.getElementById('modalPhone');
+            const emailBtn = document.getElementById('emailBtn');
+            const callBtn = document.getElementById('callBtn');
+            
+            // Reconstruct email and phone from fragments
+            const realEmail = 'bennettstouffer@gmail.com';
+            const realPhone = '8165728930';
+            
+            // Copy functions
+            window.copyEmail = function() {
+                navigator.clipboard.writeText(realEmail).then(() => {
+                    alert('Email copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy email: ', err);
+                });
+            };
+            
+            window.copyPhone = function() {
+                navigator.clipboard.writeText(realPhone).then(() => {
+                    alert('Phone number copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy phone: ', err);
+                });
+            };
+            
+            // Modal functions
+            contactBtn.addEventListener('click', function() {
+                modalEmail.textContent = realEmail;
+                modalEmail.href = 'mailto:' + realEmail;
+                modalPhone.textContent = formatPhoneNumber(realPhone);
+                modalPhone.href = 'tel:+1' + realPhone;
+                contactModal.classList.remove('hidden');
+            });
+            
+            closeModal.addEventListener('click', function() {
+                contactModal.classList.add('hidden');
+            });
+            
+            // Close modal when clicking outside
+            contactModal.addEventListener('click', function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.add('hidden');
+                }
+            });
+            
+            // Email and call buttons
+            emailBtn.addEventListener('click', function() {
+                window.location.href = 'mailto:' + realEmail;
+            });
+            
+            callBtn.addEventListener('click', function() {
+                window.location.href = 'tel:+1' + realPhone;
+            });
+            
+            // Format phone number for display
+            function formatPhoneNumber(phoneNumberString) {
+                const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+                const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+                if (match) {
+                    return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+                }
+                return phoneNumberString;
+            }
+        });
+    </script>
+</body>
+</html>
