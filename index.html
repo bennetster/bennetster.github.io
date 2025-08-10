@@ -5,20 +5,7 @@
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <title>Bennett Stouffer - Resume</title>
               <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-              <style>
-                  /* Custom CSS for additional styling */
-                  body {
-                      font-family: 'Open Sans', sans-serif;
-                  }
-
-                  a:hover {
-                      text-decoration: underline;
-                  }
-
-                  .experience-list, .education-list {
-                      list-style-type: square;
-                  }
-              </style>
+              <link rel="stylesheet" href="css/custom.css">
           </head>
           <body class="font-sans bg-gray-100">
               <header class="bg-gray-800 text-white fixed top-0 left-0 w-full z-10">
@@ -112,18 +99,6 @@
                             © Bennett Stouffer. All rights reserved.
                         </footer>
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                // Smooth scrolling for anchor links
-                                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                                    anchor.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        document.querySelector(this.getAttribute('href')).scrollIntoView({
-                                            behavior: 'smooth'
-                                        });
-                                    });
-                                });
-                            });
-                        </script>
+                        <script src="js/scripts.js"></script>
                     </body>
                     </html>

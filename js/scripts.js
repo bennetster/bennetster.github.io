@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Example simple form validation (expand as needed)
     const contactForm = document.querySelector('#contact form');
-    contactForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        // Perform validation checks, e.g., ensure fields are not empty
-        // For demonstration, just log to console
-        console.log('Form submission validated');
-        // Here, you would typically send the form data to a server or email
-    });
+    if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            // Perform validation checks, e.g., ensure fields are not empty
+            // For demonstration, just log to console
+            console.log('Form submission validated');
+            // Here, you would typically send the form data to a server or email
+        });
+    }
 });

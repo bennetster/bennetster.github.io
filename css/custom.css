@@ -1,0 +1,12 @@
+/* Custom CSS for additional styling */
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.experience-list, .education-list {
+    list-style-type: square;
+}
