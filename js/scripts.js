@@ -9,4 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Toggle navigation menu on small screens
+    const menuBtn = document.getElementById('menu-btn');
+    const menu = document.getElementById('menu');
+
+    if (menuBtn && menu) {
+        menuBtn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            menu.classList.toggle('block');
+        });
+    }
+
 });
