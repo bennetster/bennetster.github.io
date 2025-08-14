@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Game Night Booking</title>
+  <style>
+    /* Minimal, responsive container */
+    .wrap { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .cal-inline-container { width: 100%; min-height: 720px; }
+    @media (max-width: 480px) { .cal-inline-container { min-height: 820px; } }
+    .btn { display:inline-block; padding:.75rem 1rem; border:1px solid #ccc; border-radius:.75rem; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>Game Night Booking</h1>
+
+    <!-- OPTION A: Inline embed -->
+    <section aria-labelledby="inline-title">
+      <h2 id="inline-title">Book inline</h2>
+      <div id="cal-inline" class="cal-inline-container" role="region" aria-label="Inline booking widget"></div>
+    </section>
+
+    <hr style="margin:2rem 0" />
+
+    <!-- OPTION B: Popup embed -->
+    <section aria-labelledby="popup-title">
+      <h2 id="popup-title">Book via popup</h2>
+      <button id="open-popup" class="btn" type="button" aria-haspopup="dialog" aria-controls="cal-popup">
+        Book Game Night
+      </button>
+    </section>
+  </main>
+
+  <!-- Cal.com embed core (async) -->
+  <script src="https://cal.com/embed.js" async></script>
+
+  <script>
+    // Wait until Cal embed library is available
+    (function initCal() {
+      if (typeof Cal === "function") {
+        // TODO: Replace with your Cal.com link "username/event-slug"
+        const CAL_LINK = "username/event-slug";
+
+        // Optional UI styling
+        Cal("ui", { styles: { body: { background: "transparent" }}});
+
+        // Inline mount
+        Cal("inline", {
+          elementOrSelector: "#cal-inline",
+          calLink: CAL_LINK
+        });
+
+        // Popup trigger
+        document.getElementById("open-popup").addEventListener("click", function () {
+          Cal("popup", { calLink: CAL_LINK });
+        });
+      } else {
+        // Retry until script loads
+        setTimeout(initCal, 40);
+      }
+    })();
+  </script>
+</body>
+</html>
