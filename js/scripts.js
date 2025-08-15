@@ -1,3 +1,8 @@
+function toggleMenu(menu) {
+    menu.classList.toggle('hidden');
+    menu.classList.toggle('block');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -15,9 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (menuBtn && menu) {
         menuBtn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('block');
+            toggleMenu(menu);
         });
     }
-
 });
+
+if (typeof module !== 'undefined') {
+    module.exports = { toggleMenu };
+}
