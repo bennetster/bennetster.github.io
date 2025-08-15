@@ -1,0 +1,13 @@
+{
+  "name": "bennetster-site",
+  "version": "1.0.0",
+  "description": "Static site with tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jsdom": "^24.0.0"
+  }
+}
