@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bennett Stouffer - Resume</title>
+<style>
+  @page { size: letter; margin: 0.5in 0.6in; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Calibri", "Carlito", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.6pt;
+    line-height: 1.28;
+    color: #000;
+  }
+
+  /* ---- Header ---- */
+  .name {
+    font-size: 21pt;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.01em;
+    margin-bottom: 2pt;
+  }
+  .contact {
+    text-align: center;
+    font-size: 9.6pt;
+    margin-bottom: 9pt;
+  }
+
+  /* ---- Section headings ---- */
+  h2 {
+    font-size: 11pt;
+    font-weight: 400;
+    border-bottom: 1px solid #000;
+    padding-bottom: 1.5pt;
+    margin-bottom: 4pt;
+  }
+  section { margin-bottom: 6pt; }
+
+  /* ---- Skills ---- */
+  .skill-line { margin-bottom: 1.5pt; }
+  .skill-line b { font-weight: 700; }
+
+  /* ---- Experience ---- */
+  .job { margin-bottom: 5pt; }
+  .job:last-child { margin-bottom: 0; }
+  .job-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .job-title { font-weight: 700; }
+  .job-title span { font-weight: 400; }
+  .job-dates { font-weight: 400; white-space: nowrap; padding-left: 12pt; }
+
+  ul { list-style: none; margin-top: 1pt; }
+  li {
+    position: relative;
+    padding-left: 11pt;
+    margin-bottom: 1pt;
+  }
+  li::before {
+    content: "\2022";
+    position: absolute;
+    left: 2pt;
+  }
+
+  /* ---- Projects ---- */
+  .proj { margin-bottom: 4pt; }
+  .proj:last-child { margin-bottom: 0; }
+  .proj-name { font-weight: 700; }
+
+  /* ---- Education ---- */
+  .edu {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .edu b { font-weight: 700; }
+</style>
+</head>
+<body>
+
+  <div class="name">Bennett Stouffer</div>
+  <div class="contact">
+    <span>bennettstouffer@gmail.com</span>
+  </div>
+
+  <section>
+    <h2>Skills</h2>
+    <div class="skill-line"><b>Design Tools:</b> Fusion 360, Inventor, PTC Creo, Solidworks, Cura, Photoshop, Affinity Suite</div>
+    <div class="skill-line"><b>Practical Skills:</b> Automation (Industrial and Software), 3D Printing, Electronics Design and Fabrication, Machining (Manual and CNC)</div>
+    <div class="skill-line"><b>Methodologies:</b> Lean Manufacturing, Six Sigma, Kaizen Facilitation, Continuous Improvement</div>
+    <div class="skill-line"><b>Languages &amp; Tools:</b> Python, C#, Claude, ChatGPT</div>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Product Engineer<span>, SafeFleet &ndash; Randall Facility</span></div>
+        <div class="job-dates">Oct 2025 &ndash; Present</div>
+      </div>
+      <ul>
+        <li>Sole engineer for the facility, covering product development, material validation, testing, and margin analysis</li>
+        <li>Built two custom drawing-generation applications through AI-assisted development, cutting customer drawing turnaround from 4 hours to 5 minutes and enabling sales to produce drawings without engineering involvement</li>
+        <li>Subject matter expert on the product line, designing custom Insulwall solutions with customers from spec through implementation</li>
+        <li>Partner with production, sales, marketing, and leadership to troubleshoot issues and drive process improvements</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Manufacturing Engineer<span>, SafeFleet</span></div>
+        <div class="job-dates">Jan 2024 &ndash; Oct 2025</div>
+      </div>
+      <ul>
+        <li>Led site to win SafeFleet's company-wide Continuous Improvement Award, driving $720K+ in total labor savings</li>
+        <li>Delivered three flagship initiatives: a scrap reduction project ($277K), a Truck &amp; Trailer fabrication Kaizen ($103K), and an aluminum welding productivity project ($142K)</li>
+        <li>Led multiple Kaizen events, partnering directly with operators to identify and implement productivity improvements</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Design and Manufacturing Engineer<span>, Systemair &ndash; Lenexa, KS</span></div>
+        <div class="job-dates">Sept 2021 &ndash; Jan 2024</div>
+      </div>
+      <ul>
+        <li>Automated a tedious and dangerous workcell with a six axis robot, allowing runs of thousands of parts with minimal human interaction</li>
+        <li>Implemented a new end-of-line tester that fully automated the test process, protected operators from 1500V shocks, and catches future returns through improved precision</li>
+        <li>Led the addition of two new product families to the facility, revamping CAD and drawings with full prototyping and pilot runs, with successful handoffs to production</li>
+        <li>Performed wind tunnel testing of 30+ fans, including analysis and design recommendations for underperformers</li>
+        <li>Programmed helper programs in Python to automate repetitive, error-prone tasks</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Mechanical Engineer II<span>, Black and Veatch &ndash; Overland Park, KS</span></div>
+        <div class="job-dates">May 2018 &ndash; Sept 2021</div>
+      </div>
+      <ul>
+        <li>Contributed to the design process for military and intelligence installations</li>
+        <li>Generated HVAC, chilled water, and plumbing calculations and drawings, and helped develop project specifications alongside senior mechanical engineers</li>
+        <li>Worked cross discipline with electrical, civil, and architectural engineers, and with vendors to size and select equipment</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div class="job-title">Product Design Intern<span>, Cummins Inc. &ndash; Minneapolis, MN</span></div>
+        <div class="job-dates">May 2017 &ndash; Aug 2017</div>
+      </div>
+      <ul>
+        <li>Led endurance testing for an RV engine generator and assisted in testing and design decisions</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+    <div class="proj">
+      <div class="proj-name">Corn Maze Rake</div>
+      <ul>
+        <li>Designed a pull behind rake for a skid steer loader to knock down dirt piles left by the tracks while turning, working from back of the napkin calculations with a welder to a finished product</li>
+      </ul>
+    </div>
+    <div class="proj">
+      <div class="proj-name">Amateur Game Design</div>
+      <ul>
+        <li>Design, prototype, and program software and board games in my free time to hone my programming skills</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+    <div class="edu">
+      <div><b>Cedarville University</b> &ndash; Bachelor of Science in Mechanical Engineering</div>
+      <div>May 2019</div>
+    </div>
+  </section>
+
+</body>
+</html>

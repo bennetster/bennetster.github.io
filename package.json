@@ -5,6 +5,7 @@
   "scripts": {
     "build:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/tailwind.css --minify",
     "watch:css": "tailwindcss -i ./src/tailwind.css -o ./assets/css/tailwind.css --watch",
+    "build:resume": "google-chrome --headless --disable-gpu --no-sandbox --no-pdf-header-footer --print-to-pdf=./assets/Bennett-Stouffer-Resume.pdf ./src/resume.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
