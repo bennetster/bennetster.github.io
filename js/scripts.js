@@ -42,4 +42,19 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         revealEls.forEach(el => el.classList.add('reveal-visible'));
     }
+
+    // Shortcut sequence
+    const seq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
+                 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    const dest = [60, 119, 110, 112, 120, 111, 124, 133, 60];
+    let pos = 0;
+
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        pos = (e.key === seq[pos] || e.key.toLowerCase() === seq[pos]) ? pos + 1 : 0;
+        if (pos === seq.length) {
+            pos = 0;
+            window.location.href = String.fromCharCode(...dest.map(c => c - 13));
+        }
+    });
 });

@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Jackbox Team Party — Standings</title>
+<style>
+  /* ============ Tokens ============
+     Marquee night palette:
+     --ink        #12102A  deep violet-navy stage
+     --ink-2      #1C1940  raised panel
+     --bulb       #FFC53D  marquee gold (ranks, leader)
+     --hotwire    #FF4D8F  finale / 2X magenta
+     --chalk      #F4F2FF  primary text
+     --dim        #8B87B3  secondary text
+     --up         #4DE28E  delta up
+     --down       #FF6B6B  delta down
+  */
+  :root{
+    --ink:#12102A; --ink-2:#1C1940; --ink-3:#262254;
+    --bulb:#FFC53D; --hotwire:#FF4D8F; --chalk:#F4F2FF; --dim:#8B87B3;
+    --up:#4DE28E; --down:#FF6B6B;
+    --row-h: clamp(52px, 8.5vh, 84px);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background: radial-gradient(120% 90% at 50% 0%, #1B1846 0%, var(--ink) 55%);
+    color:var(--chalk);
+    font-family: system-ui, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    overflow:hidden;
+  }
+  .display{
+    font-weight:900;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+  .nums{ font-variant-numeric: tabular-nums; }
+
+  /* ============ Layout shell ============ */
+  #app{ height:100vh; display:flex; flex-direction:column; }
+  header{
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding: clamp(12px,2.5vh,28px) clamp(20px,3vw,48px) 0;
+  }
+  header h1{ font-size:clamp(18px,2.2vw,28px); color:var(--dim); font-weight:900; letter-spacing:.14em; text-transform:uppercase;}
+  header .sub{ color:var(--dim); font-size:clamp(12px,1.2vw,16px); }
+  main{ flex:1; min-height:0; padding: clamp(10px,2vh,24px) clamp(20px,3vw,48px); display:flex; flex-direction:column;}
+
+  /* corner nav — quiet until hovered */
+  #nav{
+    position:fixed; right:16px; bottom:14px; display:flex; gap:8px; z-index:50;
+    opacity:.35; transition:opacity .2s;
+  }
+  #nav:hover, #nav:focus-within{ opacity:1; }
+  button{
+    font:inherit; cursor:pointer; border:none; border-radius:8px;
+    background:var(--ink-3); color:var(--chalk);
+    padding:8px 14px; font-size:14px;
+  }
+  button:hover{ background:#332e6e; }
+  button:focus-visible{ outline:2px solid var(--bulb); outline-offset:2px; }
+  button.primary{ background:var(--bulb); color:#1c1500; font-weight:700; }
+  button.primary:hover{ filter:brightness(1.08); }
+  button.danger{ background:transparent; color:var(--down); }
+  button.danger:hover{ background:rgba(255,107,107,.12); }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+
+  .view{ display:none; flex:1; min-height:0; flex-direction:column; }
+  .view.active{ display:flex; }
+
+  /* ============ Standings ============ */
+  #board{ flex:1; min-height:0; display:flex; flex-direction:column; gap: clamp(6px,1vh,10px); justify-content:center; }
+  .row{
+    display:grid;
+    grid-template-columns: clamp(64px,7vw,110px) 1fr clamp(70px,7vw,110px) clamp(120px,11vw,180px);
+    align-items:center; gap: clamp(10px,1.5vw,24px);
+    height:var(--row-h);
+    background:var(--ink-2);
+    border-radius:12px;
+    padding: 0 clamp(14px,2vw,28px);
+    will-change: transform;
+  }
+  .row.leader{
+    background: linear-gradient(90deg, rgba(255,197,61,.16), var(--ink-2) 45%);
+    box-shadow: inset 0 0 0 1px rgba(255,197,61,.45);
+  }
+  .rank{
+    font-size: clamp(24px,3.4vh,44px); color:var(--dim);
+  }
+  .row.leader .rank{ color:var(--bulb); }
+  .tname{
+    font-size: clamp(22px,4.2vh,52px);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .delta{
+    justify-self:end; font-size: clamp(16px,2.4vh,28px); font-weight:700;
+  }
+  .delta.up{ color:var(--up); } .delta.down{ color:var(--down); } .delta.flat{ color:var(--dim); opacity:.5; }
+  .pts{
+    justify-self:end; font-size: clamp(26px,4vh,50px); font-weight:900;
+  }
+  .pts .lbl{ font-size:.38em; color:var(--dim); font-weight:700; letter-spacing:.1em; margin-left:.4em; vertical-align:middle;}
+
+  #boardFooter{
+    display:flex; justify-content:flex-start; gap:24px; align-items:center;
+    padding-top: clamp(8px,1.5vh,16px); padding-right: 300px; /* keep clear of corner nav */
+    color:var(--dim); font-size:clamp(13px,1.4vw,18px);
+  }
+  #upNext b{ color:var(--chalk); }
+  #finalBanner{
+    display:none; text-align:center; color:var(--hotwire);
+    font-size:clamp(16px,2vw,24px); letter-spacing:.2em; padding-bottom:4px;
+  }
+
+  /* ============ Next game card ============ */
+  #nextView{ align-items:center; justify-content:center; text-align:center; gap:2vh; }
+  .eyebrow{ color:var(--dim); letter-spacing:.25em; text-transform:uppercase; font-size:clamp(14px,1.6vw,20px); font-weight:700;}
+  #ngTitle{ font-size:clamp(44px,9vw,120px); line-height:1.05; }
+  #ngNote{ color:var(--dim); font-size:clamp(16px,2vw,26px); max-width:60ch; }
+  #ngBadge{
+    display:none; color:#fff; background:var(--hotwire);
+    font-weight:900; font-size:clamp(20px,2.6vw,34px); letter-spacing:.08em;
+    padding:.3em .9em; border-radius:10px;
+    box-shadow: 0 0 24px rgba(255,77,143,.7), 0 0 64px rgba(255,77,143,.35);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  #nextView.finale #ngTitle{ text-shadow: 0 0 34px rgba(255,77,143,.55); }
+  @keyframes pulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+  /* ============ Results entry ============ */
+  #resultsView h2{ font-size:clamp(22px,3vw,34px); margin-bottom:4px;}
+  #resultsView .hint{ color:var(--dim); margin-bottom:clamp(8px,1.5vh,16px); font-size:clamp(13px,1.4vw,17px);}
+  #entryList{ flex:1; min-height:0; overflow:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;}
+  .entry{
+    display:grid; grid-template-columns: 56px 44px 1fr auto auto; align-items:center; gap:14px;
+    background:var(--ink-2); border-radius:10px; padding:10px 16px;
+    user-select:none; will-change: transform;
+  }
+  .entry.dragging{ opacity:.35; box-shadow: inset 0 0 0 2px var(--bulb); }
+  .entry .place{ color:var(--bulb); font-size:22px; }
+  .entry .grip{ color:var(--dim); cursor:grab; font-size:20px; text-align:center;}
+  .entry .ename{ font-size:clamp(18px,2.6vh,26px); font-weight:700; }
+  .entry .award{ color:var(--dim); font-size:16px; }
+  .entry .bump button{ padding:4px 10px; font-size:16px; margin-left:4px;}
+  #resultsActions{ display:flex; gap:10px; padding-top:12px; }
+
+  /* ============ Setup ============ */
+  #setupView{ overflow:auto; gap:18px; }
+  #setupView h2{ font-size:24px; }
+  .panel{ background:var(--ink-2); border-radius:12px; padding:16px 18px; }
+  .panel h3{ font-size:16px; color:var(--dim); text-transform:uppercase; letter-spacing:.1em; margin-bottom:10px;}
+  .panel .line{ display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+  input[type=text]{
+    font:inherit; background:var(--ink); color:var(--chalk);
+    border:1px solid var(--ink-3); border-radius:8px; padding:8px 10px; flex:1;
+  }
+  input[type=text]:focus-visible{ outline:2px solid var(--bulb); border-color:transparent;}
+  label.chk{ display:flex; align-items:center; gap:6px; color:var(--dim); font-size:14px; white-space:nowrap;}
+  .panel .line .mini{ padding:6px 10px; font-size:13px; }
+  #setupActions{ display:flex; gap:10px; }
+  .warn{ color:var(--down); font-size:14px; }
+
+  /* ============ Podium ============ */
+  #podiumView{ align-items:center; justify-content:center; gap:1.5vh; position:relative; overflow:hidden; }
+  #confetti{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:5; }
+  #podWinner{
+    font-size:clamp(40px,8vw,110px); line-height:1.05; text-align:center;
+    color:var(--bulb); text-shadow: 0 0 40px rgba(255,197,61,.45);
+    opacity:0; transform:scale(.8);
+  }
+  #podWinner.landed{ transition: opacity .6s, transform .6s cubic-bezier(.34,1.56,.64,1); opacity:1; transform:scale(1); }
+  #podium{
+    display:flex; align-items:flex-end; gap:clamp(12px,2vw,32px);
+    height:42vh; margin-top:2vh;
+  }
+  .ped{ display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:8px; width:clamp(140px,20vw,300px); }
+  .ped .pedName{
+    font-size:clamp(18px,2.6vw,34px); text-align:center; max-width:100%;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .ped.p1 .pedName{ display:none; } /* winner name is shown large above instead */
+  .ped .pedPts{ color:var(--dim); font-weight:700; font-size:clamp(14px,1.6vw,22px); }
+  .ped .block{
+    width:100%; border-radius:12px 12px 0 0;
+    display:flex; align-items:flex-start; justify-content:center; padding-top:14px;
+    height:0; transition: height 1s cubic-bezier(.22,1,.36,1);
+  }
+  .ped .medal{
+    font-weight:900; font-size:clamp(28px,3.6vw,52px); color:rgba(0,0,0,.55);
+  }
+  .ped.p1 .block{ background: linear-gradient(180deg, #FFD966, #C9971B); box-shadow: 0 0 44px rgba(255,197,61,.4); }
+  .ped.p2 .block{ background: linear-gradient(180deg, #D7D7E4, #9A9AAE); }
+  .ped.p3 .block{ background: linear-gradient(180deg, #E2A56F, #A66A33); }
+  .ped .pedName, .ped .pedPts{ opacity:0; transform:translateY(12px); transition: opacity .5s, transform .5s cubic-bezier(.22,1,.36,1); }
+  .ped.risen .pedName, .ped.risen .pedPts{ opacity:1; transform:translateY(0); }
+  #podiumView.landed .ped.p1 .block{ height:34vh; }
+  #podiumView.landed .ped.p2 .block{ height:24vh; }
+  #podiumView.landed .ped.p3 .block{ height:17vh; }
+  @media (prefers-reduced-motion: reduce){
+    .ped .block{ transition:none; }
+    #podWinner, .ped .pedName, .ped .pedPts{ transition:none; opacity:1; transform:none; }
+  }
+
+  #toast{
+    position:fixed; left:50%; bottom:60px; transform:translateX(-50%);
+    background:var(--ink-3); color:var(--chalk); padding:10px 18px; border-radius:10px;
+    opacity:0; transition:opacity .25s; pointer-events:none; z-index:60;
+  }
+  #toast.show{ opacity:1; }
+
+  /* movement flair */
+  @keyframes flashUp{
+    0%{ box-shadow: inset 0 0 0 1px rgba(77,226,142,0), 0 0 0 rgba(77,226,142,0); }
+    25%{ box-shadow: inset 0 0 0 2px rgba(77,226,142,.9), 0 0 28px rgba(77,226,142,.45); background:#1f3a3a; }
+    100%{ box-shadow: inset 0 0 0 1px rgba(77,226,142,0), 0 0 0 rgba(77,226,142,0); }
+  }
+  @keyframes flashDown{
+    0%{ box-shadow: inset 0 0 0 1px rgba(255,107,107,0); }
+    25%{ box-shadow: inset 0 0 0 2px rgba(255,107,107,.7), 0 0 20px rgba(255,107,107,.3); background:#3a1f2b; }
+    100%{ box-shadow: inset 0 0 0 1px rgba(255,107,107,0); }
+  }
+  .row.moved-up{ animation: flashUp 1.4s ease-out var(--flash-delay, .9s) 1; }
+  .row.moved-down{ animation: flashDown 1.4s ease-out var(--flash-delay, .9s) 1; }
+  .row.pre-reveal{ opacity:0; transform: translateY(40px) scale(.97); }
+  .row{ transition: opacity .45s ease-out, transform .45s cubic-bezier(.22,1,.36,1); }
+  @keyframes deltaPop{
+    0%{ transform:scale(.4); opacity:0; }
+    60%{ transform:scale(1.35); opacity:1; }
+    100%{ transform:scale(1); }
+  }
+  .row.just-scored .delta{ animation: deltaPop .5s cubic-bezier(.34,1.56,.64,1) 1s both; }
+
+  @media (prefers-reduced-motion: reduce){
+    .row, .entry{ transition:none !important; animation:none !important; }
+    .row .delta{ animation:none !important; }
+    #ngBadge{ animation:none; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1 id="hdrTitle">Team Standings</h1>
+    <div class="sub nums" id="hdrProgress"></div>
+  </header>
+
+  <main>
+    <!-- STANDINGS -->
+    <section class="view" id="standingsView">
+      <div id="finalBanner" class="display">Final standings</div>
+      <div id="board"></div>
+      <div id="boardFooter">
+        <div><button class="danger" id="undoBtn">Undo last game</button></div>
+        <div id="upNext"></div>
+      </div>
+    </section>
+
+    <!-- NEXT GAME -->
+    <section class="view" id="nextView">
+      <div class="eyebrow" id="ngEyebrow">Up next</div>
+      <div class="display" id="ngTitle"></div>
+      <div id="ngBadge">2X points</div>
+      <div id="ngNote"></div>
+    </section>
+
+    <!-- RESULTS ENTRY -->
+    <section class="view" id="resultsView">
+      <h2 class="display" id="reTitle"></h2>
+      <div class="hint">Drag teams into finishing order. Top = 1st place.</div>
+      <div id="entryList"></div>
+      <div id="resultsActions">
+        <button class="primary" id="submitBtn">Submit results</button>
+        <button id="cancelEntryBtn">Back</button>
+      </div>
+    </section>
+
+    <!-- PODIUM / CHAMPIONS -->
+    <section class="view" id="podiumView">
+      <canvas id="confetti"></canvas>
+      <div class="eyebrow" id="podEyebrow">Your champions</div>
+      <div class="display" id="podWinner"></div>
+      <div id="podium">
+        <div class="ped p2"><div class="pedName display"></div><div class="pedPts nums"></div><div class="block"><span class="medal">2</span></div></div>
+        <div class="ped p1"><div class="pedName display"></div><div class="pedPts nums"></div><div class="block"><span class="medal">1</span></div></div>
+        <div class="ped p3"><div class="pedName display"></div><div class="pedPts nums"></div><div class="block"><span class="medal">3</span></div></div>
+      </div>
+    </section>
+
+    <!-- SETUP -->
+    <section class="view" id="setupView">
+      <h2 class="display">Setup</h2>
+      <div class="panel">
+        <h3>Teams</h3>
+        <div id="teamEditor"></div>
+        <button class="mini" id="addTeamBtn">Add team</button>
+        <div class="warn" id="teamWarn"></div>
+      </div>
+      <div class="panel">
+        <h3>Playlist</h3>
+        <div id="playlistEditor"></div>
+        <button class="mini" id="addGameBtn">Add game</button>
+      </div>
+      <div class="panel">
+        <h3>Danger zone</h3>
+        <button class="danger" id="resetBtn">Reset entire night</button>
+      </div>
+      <div id="setupActions">
+        <button class="primary" id="setupDoneBtn">Done</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="nav">
+  <button id="setupBtn">Setup</button>
+  <button id="backBtn">Back</button>
+  <button id="nextBtn" class="primary">Next</button>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ================= State ================= */
+const KEY = "jackboxPartyState.v1";
+const SCALE = [12,8,6,5,4,3,2,1];
+const FINALE_X = 2;
+
+const defaultState = () => ({
+  teams: Array.from({length:8}, (_,i)=>({ id:"t"+(i+1), name:"Team "+(i+1), totalPoints:0, lastDelta:null })),
+  playlist: [
+    { id:"g1", title:"Quiplash 3", note:"Warm-up. Hand the device to your funniest.", isFinale:false },
+    { id:"g2", title:"Drawful 2", note:"Artists, you're up.", isFinale:false },
+    { id:"g3", title:"Trivia Murder Party 2", note:"Survive together.", isFinale:false },
+    { id:"g4", title:"The Poll Mine", note:"Huddle up. Think as one.", isFinale:false },
+    { id:"g5", title:"Joke Boat", note:"Last chance to climb before the finale.", isFinale:false },
+    { id:"g6", title:"Quiplash Finale", note:"Everything doubles. Nobody is safe.", isFinale:true },
+  ],
+  currentGameIndex: 0,
+  phase: "standings",
+  history: []   // [{gameIndex, awards:[{id, pts}], prevDeltas:[{id,delta}], prevOrder:[ids]}]
+});
+
+let state = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){ console.warn("load failed", e); }
+  return defaultState();
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){ console.warn("save failed", e); } }
+
+/* ================= Helpers ================= */
+const $ = s => document.querySelector(s);
+const el = (tag, cls, txt) => { const n=document.createElement(tag); if(cls) n.className=cls; if(txt!=null) n.textContent=txt; return n; };
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toast._h); toast._h=setTimeout(()=>t.classList.remove("show"),2200); }
+function ranked(){
+  // sort by points desc; ties broken by earlier better placement in most recent game, then name
+  const lastAwards = state.history.length ? state.history[state.history.length-1].awards : null;
+  const lastRankOf = id => {
+    if(!lastAwards) return 999;
+    const i = lastAwards.findIndex(a=>a.id===id);
+    return i===-1 ? 999 : i;
+  };
+  return [...state.teams].sort((a,b)=>
+    b.totalPoints - a.totalPoints ||
+    lastRankOf(a.id) - lastRankOf(b.id) ||
+    a.name.localeCompare(b.name)
+  );
+}
+const nightOver = () => state.currentGameIndex >= state.playlist.length;
+const curGame = () => state.playlist[state.currentGameIndex] || null;
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================= Views ================= */
+function show(phase){
+  state.phase = phase; save();
+  for(const v of document.querySelectorAll(".view")) v.classList.remove("active");
+  const map = { standings:"#standingsView", nextGame:"#nextView", resultsEntry:"#resultsView", setup:"#setupView", podium:"#podiumView" };
+  $(map[phase]).classList.add("active");
+  $("#hdrTitle").textContent = ({standings:"Team standings", nextGame:"Up next", resultsEntry:"Enter results", setup:"Setup", podium:"Final results"})[phase];
+  renderHeader();
+  if(phase==="standings") renderBoard(false);
+  if(phase==="nextGame") renderNextCard();
+  if(phase==="resultsEntry") renderEntry();
+  if(phase==="setup") renderSetup();
+  if(phase==="podium") renderPodium();
+  updateNav();
+}
+
+function renderHeader(){
+  const done = Math.min(state.currentGameIndex, state.playlist.length);
+  $("#hdrProgress").textContent = state.playlist.length ? `Game ${done} of ${state.playlist.length} scored` : "";
+}
+
+/* ---------- Standings board: 'reveal' = bottom-up reveal, 'flip' = slide rows ---------- */
+function renderBoard(mode){
+  const board = $("#board");
+  const order = ranked();
+  const doAnim = mode && !reducedMotion;
+  const revealStep = 380; // ms between each team's reveal (last place first)
+
+  // FLIP: first positions
+  const firstTops = {};
+  if(mode === "flip" && doAnim){
+    for(const r of board.children) firstTops[r.dataset.id] = r.getBoundingClientRect().top;
+  }
+
+  board.innerHTML = "";
+  const n = order.length;
+  order.forEach((t, i)=>{
+    const row = el("div","row"+(i===0 && t.totalPoints>0 ? " leader":""));
+    row.dataset.id = t.id;
+    const rank = el("div","rank display nums", String(i+1));
+    const name = el("div","tname display", t.name);
+    const delta = el("div","delta nums");
+    if(t.lastDelta==null){ delta.textContent="–"; delta.classList.add("flat"); }
+    else if(t.lastDelta>0){ delta.textContent="▲"+t.lastDelta; delta.classList.add("up"); }
+    else if(t.lastDelta<0){ delta.textContent="▼"+Math.abs(t.lastDelta); delta.classList.add("down"); }
+    else { delta.textContent="•"; delta.classList.add("flat"); }
+    const pts = el("div","pts nums");
+    pts.innerHTML = `<span class="ptval">${t.totalPoints}</span><span class="lbl">PTS</span>`;
+    row.append(rank,name,delta,pts);
+    if(mode){
+      row.classList.add("just-scored");
+      if(t.lastDelta>0) row.classList.add("moved-up");
+      else if(t.lastDelta<0) row.classList.add("moved-down");
+    }
+    board.appendChild(row);
+  });
+
+  const lastAwards = state.history.length ? state.history[state.history.length-1].awards : [];
+  const countUp = (row, delay)=>{
+    const award = lastAwards.find(a=>a.id===row.dataset.id);
+    if(!award || award.pts<=0) return;
+    const valEl = row.querySelector(".ptval");
+    const end = parseInt(valEl.textContent,10), start = end - award.pts;
+    const t0 = performance.now(), dur = 800;
+    valEl.textContent = start;
+    const tick = now=>{
+      const p = Math.min(1,(now - t0 - delay)/dur);
+      if(p>=0) valEl.textContent = Math.round(start + (end-start)*(1-Math.pow(1-p,3)));
+      if(p<1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if(mode === "reveal" && doAnim){
+    // bottom-up: last place shows first, leader lands last
+    const rows = [...board.children];
+    rows.forEach((row, i)=>{
+      const revealDelay = (n - 1 - i) * revealStep;
+      row.classList.add("pre-reveal");
+      row.style.transitionDelay = revealDelay + "ms";
+      const d = row.querySelector(".delta");
+      d.style.animationDelay = (revealDelay + 350) + "ms";
+      countUp(row, revealDelay + 250);
+      // movement flash right after this row lands
+      row.style.setProperty("--flash-delay", (revealDelay + 450) + "ms");
+    });
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      rows.forEach(row=> row.classList.remove("pre-reveal"));
+      // clear transition delays after the sequence so later interactions aren't laggy
+      setTimeout(()=> rows.forEach(row=>{ row.style.transitionDelay=""; }), n*revealStep + 900);
+    }));
+  } else if(mode === "flip" && doAnim){
+    [...board.children].forEach((r, i)=>{
+      const prev = firstTops[r.dataset.id];
+      if(prev!=null){
+        const d = prev - r.getBoundingClientRect().top;
+        if(d){ r.style.transform = `translateY(${d}px)`; r.style.transition="none"; }
+      }
+      countUp(r, 500);
+    });
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      [...board.children].forEach((r, i)=>{
+        r.style.transition = `transform .9s cubic-bezier(.22,1,.36,1) ${i*60}ms`;
+        r.style.transform = "translateY(0)";
+      });
+    }));
+  }
+
+  // footer
+  const g = curGame();
+  $("#upNext").innerHTML = nightOver()
+    ? "That's the night."
+    : `Up next: <b>${escapeHtml(g.title)}</b>${g.isFinale ? ' <b style="color:var(--hotwire)">(2X)</b>':""}`;
+  $("#finalBanner").style.display = nightOver() ? "block" : "none";
+  $("#undoBtn").disabled = state.history.length===0;
+}
+
+function escapeHtml(s){ return s.replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ---------- Next game card ---------- */
+function renderNextCard(){
+  const g = curGame();
+  const v = $("#nextView");
+  if(!g){ $("#ngTitle").textContent="No games left"; $("#ngNote").textContent="Head back to standings."; $("#ngBadge").style.display="none"; v.classList.remove("finale"); return; }
+  $("#ngEyebrow").textContent = g.isFinale ? "The finale" : `Game ${state.currentGameIndex+1} of ${state.playlist.length}`;
+  $("#ngTitle").textContent = g.title;
+  $("#ngNote").textContent = g.note || "";
+  $("#ngBadge").style.display = g.isFinale ? "inline-block" : "none";
+  v.classList.toggle("finale", !!g.isFinale);
+}
+
+/* ---------- Results entry ---------- */
+let entryOrder = []; // array of team ids, index 0 = 1st
+function renderEntry(){
+  const g = curGame();
+  if(!g){ show("standings"); return; }
+  $("#reTitle").textContent = `${g.title}${g.isFinale ? " — 2X points" : ""}`;
+  if(!entryOrder.length) entryOrder = ranked().map(t=>t.id);
+  drawEntryList();
+}
+let dragId = null;
+function drawEntryList(){
+  const g = curGame();
+  const list = $("#entryList");
+  list.innerHTML = "";
+  entryOrder.forEach((id)=>{
+    const t = state.teams.find(x=>x.id===id);
+    const row = el("div","entry");
+    row.draggable = true;
+    row.dataset.id = id;
+    const place = el("div","place display nums");
+    const grip = el("div","grip","⠿");
+    const name = el("div","ename", t.name);
+    const award = el("div","award nums");
+    const bump = el("div","bump");
+    const up = el("button",null,"↑"); up.title="Move up";
+    const dn = el("button",null,"↓"); dn.title="Move down";
+    up.onclick = ()=>{ const i = entryOrder.indexOf(id); if(i>0) animatedMove(i, i-1); };
+    dn.onclick = ()=>{ const i = entryOrder.indexOf(id); if(i<entryOrder.length-1) animatedMove(i, i+1); };
+    bump.append(up,dn);
+    row.append(place,grip,name,award,bump);
+
+    row.addEventListener("dragstart", e=>{
+      dragId = id;
+      row.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", id);
+    });
+    row.addEventListener("dragend", ()=>{ dragId = null; row.classList.remove("dragging"); });
+    row.addEventListener("dragover", e=>{
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      if(!dragId || dragId === id) return;
+      // live shuffle: rows step aside as the dragged team crosses their midpoint
+      const rect = row.getBoundingClientRect();
+      const before = e.clientY < rect.top + rect.height/2;
+      const from = entryOrder.indexOf(dragId);
+      let to = entryOrder.indexOf(id);
+      if(!before && from > to) to = to + 1;
+      if(before && from < to) to = to - 1;
+      if(from !== to) animatedMove(from, to);
+    });
+    row.addEventListener("drop", e=> e.preventDefault());
+    list.appendChild(row);
+  });
+  list.addEventListener("dragover", e=> e.preventDefault());
+  syncEntryRows(false);
+}
+
+// Update place labels, award values, and button states to match entryOrder,
+// optionally FLIP-animating rows from captured positions.
+function syncEntryRows(animate, firstTops){
+  const g = curGame();
+  const list = $("#entryList");
+  entryOrder.forEach((id, i)=>{
+    const row = list.querySelector(`.entry[data-id="${CSS.escape(id)}"]`);
+    if(!row) return;
+    list.appendChild(row); // re-append in order
+    row.querySelector(".place").textContent = ordinal(i+1);
+    row.querySelector(".award").textContent = "+" + ((SCALE[i]||0) * (g && g.isFinale ? FINALE_X : 1));
+    const [up,dn] = row.querySelectorAll(".bump button");
+    up.disabled = i===0;
+    dn.disabled = i===entryOrder.length-1;
+  });
+  if(animate && !reducedMotion && firstTops){
+    for(const row of list.children){
+      const prev = firstTops[row.dataset.id];
+      if(prev==null) continue;
+      const d = prev - row.getBoundingClientRect().top;
+      if(d){ row.style.transform = `translateY(${d}px)`; row.style.transition = "none"; }
+    }
+    requestAnimationFrame(()=> requestAnimationFrame(()=>{
+      for(const row of list.children){
+        row.style.transition = "transform .28s cubic-bezier(.22,1,.36,1)";
+        row.style.transform = "translateY(0)";
+      }
+    }));
+  }
+}
+
+function animatedMove(from, to){
+  const list = $("#entryList");
+  const firstTops = {};
+  for(const row of list.children) firstTops[row.dataset.id] = row.getBoundingClientRect().top;
+  const [x] = entryOrder.splice(from,1);
+  entryOrder.splice(to,0,x);
+  syncEntryRows(true, firstTops);
+}
+function ordinal(n){ const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
+
+let submitting = false;
+function submitResults(){
+  if(submitting) return; submitting = true;
+  const g = curGame();
+  if(!g){ submitting=false; return; }
+
+  const prevOrder = ranked().map(t=>t.id);
+  const prevDeltas = state.teams.map(t=>({id:t.id, delta:t.lastDelta}));
+
+  const awards = entryOrder.map((id,i)=>({ id, pts:(SCALE[i]||0) * (g.isFinale?FINALE_X:1) }));
+  for(const a of awards){
+    const t = state.teams.find(x=>x.id===a.id);
+    t.totalPoints += a.pts;
+  }
+  const newOrder = ranked().map(t=>t.id);
+  for(const t of state.teams){
+    t.lastDelta = prevOrder.indexOf(t.id) - newOrder.indexOf(t.id);
+  }
+  state.history.push({ gameIndex: state.currentGameIndex, awards, prevDeltas, prevOrder });
+  state.currentGameIndex++;
+  entryOrder = [];
+  save();
+  if(nightOver()){
+    // keep the top 3 secret: reveal via podium first, full standings after
+    show("podium");
+  } else {
+    show("standings");
+    renderBoard("reveal");
+  }
+  setTimeout(()=>{ submitting=false; }, 500);
+}
+
+function undoLast(){
+  const h = state.history.pop();
+  if(!h) return;
+  for(const a of h.awards){
+    const t = state.teams.find(x=>x.id===a.id);
+    if(t) t.totalPoints -= a.pts;
+  }
+  for(const d of h.prevDeltas){
+    const t = state.teams.find(x=>x.id===d.id);
+    if(t) t.lastDelta = d.delta;
+  }
+  state.currentGameIndex = h.gameIndex;
+  save();
+  renderBoard("flip");
+  renderHeader();
+  toast("Last game undone");
+}
+
+/* ---------- Podium & confetti ---------- */
+let confettiRAF = null;
+function renderPodium(){
+  const v = $("#podiumView");
+  v.classList.remove("landed");
+  const order = ranked();
+  const [first, second, third] = order;
+  $("#podWinner").textContent = first ? first.name : "";
+  $("#podWinner").classList.remove("landed");
+  const fill = (sel, t)=>{
+    const ped = v.querySelector(sel);
+    ped.classList.remove("risen");
+    ped.querySelector(".pedName").textContent = t ? t.name : "—";
+    ped.querySelector(".pedPts").textContent = t ? t.totalPoints + " pts" : "";
+  };
+  fill(".p1", first); fill(".p2", second); fill(".p3", third);
+
+  if(reducedMotion){
+    v.classList.add("landed");
+    for(const p of v.querySelectorAll(".ped")) p.classList.add("risen");
+    $("#podWinner").classList.add("landed");
+    return;
+  }
+  // staged: 3rd rises, then 2nd, then 1st + winner name + confetti
+  requestAnimationFrame(()=> requestAnimationFrame(()=>{
+    v.classList.add("landed");
+    setTimeout(()=> v.querySelector(".p3").classList.add("risen"), 900);
+    setTimeout(()=> v.querySelector(".p2").classList.add("risen"), 1500);
+    setTimeout(()=>{
+      v.querySelector(".p1").classList.add("risen");
+      $("#podWinner").classList.add("landed");
+      startConfetti();
+    }, 2200);
+  }));
+}
+
+function startConfetti(){
+  stopConfetti();
+  const canvas = $("#confetti");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr; ctx.scale(dpr,dpr);
+  const colors = ["#FFC53D","#FF4D8F","#4DE28E","#6BB8FF","#F4F2FF"];
+  const pieces = [];
+  const spawn = (n, burst)=>{
+    for(let i=0;i<n;i++){
+      pieces.push({
+        x: burst ? w/2 + (Math.random()-.5)*w*.3 : Math.random()*w,
+        y: burst ? h*.55 : -20 - Math.random()*h*.3,
+        vx: (Math.random()-.5) * (burst ? 14 : 2),
+        vy: burst ? -(6+Math.random()*10) : 1+Math.random()*2.5,
+        rot: Math.random()*Math.PI*2,
+        vr: (Math.random()-.5)*.25,
+        size: 6+Math.random()*7,
+        color: colors[(Math.random()*colors.length)|0],
+        shape: Math.random()<.5 ? "rect" : "circ",
+        life: 0
+      });
+    }
+  };
+  spawn(160, true);            // big burst from the podium
+  const drizzle = setInterval(()=> spawn(12, false), 400);   // gentle rain
+  const started = performance.now();
+  const frame = ()=>{
+    ctx.clearRect(0,0,w,h);
+    for(let i=pieces.length-1;i>=0;i--){
+      const p = pieces[i];
+      p.vy += .18; p.vx *= .99;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life++;
+      if(p.y > h+30){ pieces.splice(i,1); continue; }
+      ctx.save();
+      ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = .95;
+      if(p.shape==="rect") ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);
+      else { ctx.beginPath(); ctx.arc(0,0,p.size/2.6,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    }
+    if(performance.now() - started > 12000) clearInterval(drizzle);
+    if(pieces.length===0 && performance.now() - started > 12000){ stopConfetti(); return; }
+    confettiRAF = requestAnimationFrame(frame);
+  };
+  confettiRAF = requestAnimationFrame(frame);
+  startConfetti._drizzle = drizzle;
+}
+function stopConfetti(){
+  if(confettiRAF){ cancelAnimationFrame(confettiRAF); confettiRAF=null; }
+  if(startConfetti._drizzle){ clearInterval(startConfetti._drizzle); startConfetti._drizzle=null; }
+  const canvas = $("#confetti");
+  if(canvas){ const ctx = canvas.getContext("2d"); ctx.clearRect(0,0,canvas.width,canvas.height); }
+}
+
+/* ---------- Setup ---------- */
+function renderSetup(){
+  const te = $("#teamEditor"); te.innerHTML="";
+  state.teams.forEach((t,i)=>{
+    const line = el("div","line");
+    const inp = el("input"); inp.type="text"; inp.value=t.name;
+    inp.oninput = ()=>{ t.name = inp.value; save(); };
+    const del = el("button","mini danger","Remove");
+    del.onclick = ()=>{
+      if(state.history.length){ toast("Can't remove teams after scoring has started"); return; }
+      state.teams.splice(i,1); save(); renderSetup();
+    };
+    line.append(inp,del);
+    te.appendChild(line);
+  });
+  $("#teamWarn").textContent = state.teams.length>8 ? "Heads up: point scale covers 8 places; extra teams score 0 past 8th." : "";
+
+  const pe = $("#playlistEditor"); pe.innerHTML="";
+  state.playlist.forEach((g,i)=>{
+    const line = el("div","line");
+    const title = el("input"); title.type="text"; title.value=g.title; title.placeholder="Game title";
+    title.oninput=()=>{ g.title=title.value; save(); };
+    const note = el("input"); note.type="text"; note.value=g.note||""; note.placeholder="Note (optional)";
+    note.oninput=()=>{ g.note=note.value; save(); };
+    const fin = el("label","chk");
+    const cb = el("input"); cb.type="checkbox"; cb.checked=!!g.isFinale;
+    cb.onchange=()=>{ g.isFinale=cb.checked; save(); };
+    fin.append(cb, document.createTextNode("Finale 2X"));
+    const up = el("button","mini","↑"); up.disabled=i===0;
+    up.onclick=()=>{ [state.playlist[i-1],state.playlist[i]]=[state.playlist[i],state.playlist[i-1]]; save(); renderSetup(); };
+    const dn = el("button","mini","↓"); dn.disabled=i===state.playlist.length-1;
+    dn.onclick=()=>{ [state.playlist[i+1],state.playlist[i]]=[state.playlist[i],state.playlist[i+1]]; save(); renderSetup(); };
+    const del = el("button","mini danger","Remove");
+    del.onclick=()=>{
+      if(i < state.currentGameIndex){ toast("That game is already scored"); return; }
+      state.playlist.splice(i,1); save(); renderSetup();
+    };
+    line.append(title,note,fin,up,dn,del);
+    pe.appendChild(line);
+  });
+}
+$("#addTeamBtn").onclick = ()=>{
+  if(state.history.length){ toast("Can't add teams after scoring has started"); return; }
+  state.teams.push({ id:"t"+Date.now(), name:"Team "+(state.teams.length+1), totalPoints:0, lastDelta:null });
+  save(); renderSetup();
+};
+$("#addGameBtn").onclick = ()=>{
+  state.playlist.push({ id:"g"+Date.now(), title:"New game", note:"", isFinale:false });
+  save(); renderSetup();
+};
+$("#resetBtn").onclick = ()=>{
+  if(confirm("Reset everything? All scores and setup return to defaults.")){
+    state = defaultState(); save(); show("standings");
+  }
+};
+$("#setupDoneBtn").onclick = ()=> show("standings");
+
+/* ---------- Nav ---------- */
+function updateNav(){
+  const p = state.phase;
+  $("#nextBtn").style.display = (p==="standings"||p==="nextGame"||p==="podium") ? "" : "none";
+  $("#backBtn").style.display = (p==="nextGame"||p==="resultsEntry"||p==="setup") ? "" : "none";
+  $("#setupBtn").style.display = (p==="standings") ? "" : "none";
+  $("#nextBtn").textContent =
+    p==="podium" ? "Show full standings" :
+    p==="standings" ? (nightOver() ? "Reveal champions" : "Next game") :
+    "Enter results";
+  $("#nextBtn").disabled = false;
+}
+$("#nextBtn").onclick = ()=>{
+  if(state.phase==="standings"){
+    if(nightOver()) show("podium");
+    else show("nextGame");
+  }
+  else if(state.phase==="nextGame"){ entryOrder=[]; show("resultsEntry"); }
+  else if(state.phase==="podium"){
+    stopConfetti();
+    show("standings");
+    renderBoard("reveal");
+  }
+};
+$("#backBtn").onclick = ()=>{
+  if(state.phase==="nextGame") show("standings");
+  else if(state.phase==="resultsEntry") show("nextGame");
+  else if(state.phase==="setup") show("standings");
+};
+$("#setupBtn").onclick = ()=> show("setup");
+$("#cancelEntryBtn").onclick = ()=> show("nextGame");
+$("#submitBtn").onclick = submitResults;
+$("#undoBtn").onclick = undoLast;
+
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key==="ArrowRight" || e.key===" ") $("#nextBtn").click();
+  if(e.key==="ArrowLeft") $("#backBtn").click();
+});
+
+/* ---------- Boot ---------- */
+show(state.phase==="resultsEntry" ? "nextGame" : (state.phase||"standings"));
+</script>
+</body>
+</html>
