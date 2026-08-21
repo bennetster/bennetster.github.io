@@ -14,172 +14,240 @@
 
   <link rel="icon" href="/assets/img/favicon.ico">
   <link rel="stylesheet" href="/assets/css/tailwind.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* Custom CSS for additional styling */
-    body {
-      font-family: 'Open Sans', sans-serif;
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; }
+    .font-heading { font-family: 'Sora', sans-serif; }
+
+    /* Scroll-reveal */
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.reveal-visible { opacity: 1; transform: translateY(0); }
+
+    /* Nav link underline */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -2px;
+      width: 0; height: 1.5px;
+      background: #c2410c;
+      transition: width .25s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Timeline */
+    .timeline-item { position: relative; padding-left: 1.75rem; border-left: 2px solid #e5e7eb; }
+    .timeline-item:last-child { border-left-color: transparent; }
+    .timeline-dot {
+      position: absolute; left: -7px; top: 0.35rem;
+      width: 12px; height: 12px; border-radius: 9999px;
+      background: #c2410c; border: 3px solid #ffffff;
+      box-shadow: 0 0 0 2px #e5e7eb;
     }
 
-    a:hover {
-      text-decoration: underline;
+    .bullet-mark li { position: relative; padding-left: 1.1rem; }
+    .bullet-mark li::before {
+      content: '';
+      position: absolute; left: 0; top: 0.55em;
+      width: 6px; height: 6px;
+      background: #c2410c;
     }
 
-    .experience-list, .education-list {
-      list-style-type: square;
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1; transform: none; transition: none; }
     }
   </style>
 </head>
-<body class="font-sans bg-gray-900 text-gray-100">
-  <header class="bg-gray-800 text-white fixed top-0 left-0 w-full z-10">
-    <nav aria-label="Primary" class="container mx-auto flex justify-between items-center p-4">
-      <div class="font-bold">Bennett Stouffer</div>
+<body class="bg-white text-ink antialiased">
+  <header class="fixed top-0 left-0 w-full z-20 bg-white/80 backdrop-blur border-b border-gray-100">
+    <nav aria-label="Primary" class="max-w-5xl mx-auto flex justify-between items-center px-6 py-4">
+      <a href="#hero" class="font-heading font-bold text-lg tracking-tight">Bennett Stouffer</a>
       <div id="menu" class="hidden md:block">
-        <ul class="flex list-none items-center">
-          <li><a href="#about" class="px-4 hover:underline">About</a></li>
-          <li><a href="#skills" class="px-4 hover:underline">Skills</a></li>
-          <li><a href="#experience" class="px-4 hover:underline">Experience</a></li>
-          <li><a href="#education" class="px-4 hover:underline">Education</a></li>
-          <li><a href="#projects" class="px-4 hover:underline">Projects</a></li>
-          <li><a href="#contact" class="px-4 hover:underline">Contact</a></li>
+        <ul class="flex list-none items-center gap-8 text-sm font-medium text-gray-700">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#experience" class="nav-link">Experience</a></li>
+          <li><a href="#education" class="nav-link">Education</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
         </ul>
       </div>
-      <button id="menu-btn" class="md:hidden focus:outline-none">
+      <button id="menu-btn" class="md:hidden focus:outline-none" aria-label="Toggle menu">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </nav>
   </header>
 
-  <section id="hero" class="flex items-center justify-center h-screen" style="background: linear-gradient(to right, #6e2a15, #2e404f);">
-    <div class="text-center text-white">
-      <p class="text-xl mb-2">Engineer • Designer • Problem Solver</p>
-      <h1 class="text-5xl font-extrabold mb-4">Crafting Innovative Solutions</h1>
-      <a href="#projects" class="bg-white text-gray-900 font-semibold py-2 px-6 rounded shadow hover:bg-gray-100">See My Work</a>
+  <section id="hero" class="relative flex items-center justify-center min-h-screen px-6">
+    <div class="text-center max-w-2xl">
+      <p class="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-accent mb-5">Engineer &middot; Designer &middot; Problem Solver</p>
+      <h1 class="font-heading text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight mb-6">Crafting Innovative Solutions</h1>
+      <p class="text-gray-500 mb-8 text-base sm:text-lg">Mechanical &amp; manufacturing engineer building automated, efficient, and thoughtfully designed systems.</p>
+      <a href="#projects" class="inline-block border border-ink text-ink font-semibold text-sm py-3 px-8 rounded-full hover:bg-ink hover:text-white transition-colors">See My Work</a>
     </div>
+    <a href="#about" aria-label="Scroll to About section" class="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-400 hover:text-accent transition-colors animate-bounce">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+    </a>
   </section>
 
-  <main class="pt-16">
-    <section id="about" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">About Me</h2>
-      <img src="/assets/img/profile.jpg" alt="Bennett Stouffer" class="w-48 h-auto border border-gray-300 shadow-md">
-      <p>I am Bennett Stouffer, a dedicated and skilled professional with a passion for design, engineering, and technology. With expertise in design tools, practical skills, and programming languages, I excel in creating innovative solutions and enhancing efficiency in the engineering domain.</p>
-    </section>
-
-    <section id="skills" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">Skills</h2>
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold text-gray-100">Design Tools</h3>
-        <ul class="list-disc ml-8">
-          <li>Fusion 360</li>
-          <li>Inventor</li>
-          <li>PTC Creo</li>
-          <li>Solidworks</li>
-          <li>Cura</li>
-          <li>Photoshop</li>
-          <li>Affinity Suite</li>
-        </ul>
-      </div>
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold text-gray-100">Practical Skills</h3>
-        <ul class="list-disc ml-8">
-          <li>Automation (Industrial and Software)</li>
-          <li>3D Printing</li>
-          <li>Electronics Design and Fabrication</li>
-          <li>Machining (Manual and CNC)</li>
-        </ul>
-      </div>
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold text-gray-100">Languages</h3>
-        <ul class="list-disc ml-8">
-          <li>Python</li>
-          <li>C#</li>
-        </ul>
+  <main class="pt-8">
+    <section id="about" class="max-w-5xl mx-auto px-6 py-20 reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">About</p>
+      <div class="grid sm:grid-cols-[auto,1fr] gap-8 items-start">
+        <img src="/assets/img/profile.jpg" alt="Bennett Stouffer" class="w-40 h-auto rounded-2xl shadow-sm">
+        <p class="text-gray-600 leading-relaxed text-lg">I am Bennett Stouffer, a dedicated and skilled professional with a passion for design, engineering, and technology. With expertise in design tools, practical skills, and programming languages, I excel in creating innovative solutions and enhancing efficiency in the engineering domain.</p>
       </div>
     </section>
 
-    <section id="experience" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">Experience</h2>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Product Engineer, SafeFleet – Randall Facility</h3>
-        <p class="text-gray-400">Oct 2025 – Present</p>
-        <ul class="list-disc ml-8">
-          <li>Serve as the sole engineer for the Randall facility, single-handedly covering product development, testing, process improvement, and cross-functional support — requiring fast, independent decision-making across a wide range of technical and business needs.</li>
-          <li>Act as the subject matter expert on the product line, fielding technical questions directly from sales and customers.</li>
-          <li>Design custom Insulwall solutions to meet specific customer requirements, working directly with clients from spec to implementation.</li>
-          <li>Partner with production to troubleshoot issues and drive continuous process improvements on the floor.</li>
-        </ul>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Manufacturing Engineer, SafeFleet</h3>
-        <p class="text-gray-400">Jan 2024 – Oct 2025</p>
-        <ul class="list-disc ml-8">
-          <li>Led site to win SafeFleet's company-wide Continuous Improvement Award, driving $720K+ in total labor savings across multiple projects.</li>
-          <li>Delivered three flagship initiatives: a scrap reduction project ($277K), a Kaizen in the Truck & Trailer fabrication area ($103K), and an aluminum welding productivity project ($142K).</li>
-          <li>Led multiple Kaizen events, partnering directly with operators to identify and implement productivity improvements.</li>
-          <li>Trained in Lean methodology, Six Sigma, and Kaizen facilitation.</li>
-        </ul>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Design and Manufacturing Engineer, Systemair – Lenexa, KS</h3>
-        <p class="text-gray-400">Sept 2021 – Jan 2024</p>
-        <ul class="list-disc ml-8">
-          <li>Automated a tedious and dangerous workcell with a six axis robot, allowing for runs of thousands of parts with minimal human interaction.</li>
-          <li>Implemented a new end-of-line tester, which fully automated the test process, protected operators from 1500V shocks, and with the new level of precision catches future returns.</li>
-          <li>Led the addition of two new product families to our facility, including revamping the CAD and drawings, along with full prototyping and pilot runs, with successful handoffs to production.</li>
-          <li>Programmed helper programs in Python to automate repetitive tasks that were tedious or easy to blunder.</li>
-          <li>Performed wind tunnel performance testing of 30+ fans, including analysis and recommending design change for underperforming fans.</li>
-          <li>Routinely led firefighting efforts out on the line, troubleshooting problems, interpreting drawings, and calibrating test equipment.</li>
-        </ul>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Mechanical Engineer II, Black and Veatch – Overland Park, KS</h3>
-        <p class="text-gray-400">May 2018 – Sept 2021</p>
-        <ul class="list-disc ml-8">
-          <li>Contributed to the design process for military and intelligence installations.</li>
-          <li>Generated HVAC, chilled water, and plumbing calculations and drawings.</li>
-          <li>Helped develop specifications for projects alongside senior mechanical engineers.</li>
-          <li>Worked cross discipline with electrical, civil, and architectural engineers.</li>
-          <li>Worked with vendors to size and select equipment.</li>
-        </ul>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Product Design Intern, Cummins Inc. – Minneapolis, MN</h3>
-        <p class="text-gray-400">May 2017 – Aug 2017</p>
-        <ul class="list-disc ml-8">
-          <li>Led the endurance testing for a RV Engine Generator.</li>
-          <li>Assisted in testing and design decisions.</li>
-          <li>Shadowed senior engineers throughout the design process.</li>
-        </ul>
+    <section id="skills" class="max-w-5xl mx-auto px-6 py-20 reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">Skills</p>
+      <h2 class="font-heading text-2xl sm:text-3xl font-bold mb-10">What I Work With</h2>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div>
+          <h3 class="font-heading font-semibold text-sm uppercase tracking-wide text-gray-400 mb-4">Design Tools</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Fusion 360</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Inventor</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">PTC Creo</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Solidworks</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Cura</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Photoshop</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Affinity Suite</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-sm uppercase tracking-wide text-gray-400 mb-4">Practical Skills</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Automation (Industrial &amp; Software)</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">3D Printing</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Electronics Design &amp; Fabrication</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Machining (Manual &amp; CNC)</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-sm uppercase tracking-wide text-gray-400 mb-4">Languages</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Python</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">C#</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-heading font-semibold text-sm uppercase tracking-wide text-gray-400 mb-4">AI Tools</h3>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">Claude</span>
+            <span class="text-sm border border-gray-200 rounded-full px-3 py-1">ChatGPT</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="education" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">Education</h2>
-      <p>Cedarville University – Bachelor of Science in Mechanical Engineering, May 2019</p>
+    <section id="experience" class="max-w-5xl mx-auto px-6 py-20 reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">Experience</p>
+      <h2 class="font-heading text-2xl sm:text-3xl font-bold mb-10">Where I've Worked</h2>
+
+      <div class="space-y-10">
+        <div class="timeline-item pb-2">
+          <span class="timeline-dot"></span>
+          <h3 class="font-heading font-semibold text-lg">Product Engineer, SafeFleet &ndash; Randall Facility</h3>
+          <p class="text-gray-400 text-sm mb-3">Oct 2025 &ndash; Present</p>
+          <ul class="bullet-mark text-gray-600 space-y-2 text-[15px] leading-relaxed">
+            <li>Serve as the sole engineer for the Randall facility, single-handedly covering product development, testing, process improvement, and cross-functional support &mdash; requiring fast, independent decision-making across a wide range of technical and business needs.</li>
+            <li>Built two custom drawing-generation applications through AI-assisted (&ldquo;vibe coding&rdquo;) development with Claude, cutting customer drawing turnaround from 4 hours to 5 minutes and enabling sales to generate accurate technical drawings independently, without engineering involvement.</li>
+            <li>Act as the subject matter expert on the product line, fielding technical questions directly from sales and customers.</li>
+            <li>Design custom Insulwall solutions to meet specific customer requirements, working directly with clients from spec to implementation.</li>
+            <li>Partner with production to troubleshoot issues and drive continuous process improvements on the floor.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item pb-2">
+          <span class="timeline-dot"></span>
+          <h3 class="font-heading font-semibold text-lg">Manufacturing Engineer, SafeFleet</h3>
+          <p class="text-gray-400 text-sm mb-3">Jan 2024 &ndash; Oct 2025</p>
+          <ul class="bullet-mark text-gray-600 space-y-2 text-[15px] leading-relaxed">
+            <li>Led site to win SafeFleet's company-wide Continuous Improvement Award, driving $720K+ in total labor savings across multiple projects.</li>
+            <li>Delivered three flagship initiatives: a scrap reduction project ($277K), a Kaizen in the Truck &amp; Trailer fabrication area ($103K), and an aluminum welding productivity project ($142K).</li>
+            <li>Led multiple Kaizen events, partnering directly with operators to identify and implement productivity improvements.</li>
+            <li>Trained in Lean methodology, Six Sigma, and Kaizen facilitation.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item pb-2">
+          <span class="timeline-dot"></span>
+          <h3 class="font-heading font-semibold text-lg">Design and Manufacturing Engineer, Systemair &ndash; Lenexa, KS</h3>
+          <p class="text-gray-400 text-sm mb-3">Sept 2021 &ndash; Jan 2024</p>
+          <ul class="bullet-mark text-gray-600 space-y-2 text-[15px] leading-relaxed">
+            <li>Automated a tedious and dangerous workcell with a six axis robot, allowing for runs of thousands of parts with minimal human interaction.</li>
+            <li>Implemented a new end-of-line tester, which fully automated the test process, protected operators from 1500V shocks, and with the new level of precision catches future returns.</li>
+            <li>Led the addition of two new product families to our facility, including revamping the CAD and drawings, along with full prototyping and pilot runs, with successful handoffs to production.</li>
+            <li>Programmed helper programs in Python to automate repetitive tasks that were tedious or easy to blunder.</li>
+            <li>Performed wind tunnel performance testing of 30+ fans, including analysis and recommending design change for underperforming fans.</li>
+            <li>Routinely led firefighting efforts out on the line, troubleshooting problems, interpreting drawings, and calibrating test equipment.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item pb-2">
+          <span class="timeline-dot"></span>
+          <h3 class="font-heading font-semibold text-lg">Mechanical Engineer II, Black and Veatch &ndash; Overland Park, KS</h3>
+          <p class="text-gray-400 text-sm mb-3">May 2018 &ndash; Sept 2021</p>
+          <ul class="bullet-mark text-gray-600 space-y-2 text-[15px] leading-relaxed">
+            <li>Contributed to the design process for military and intelligence installations.</li>
+            <li>Generated HVAC, chilled water, and plumbing calculations and drawings.</li>
+            <li>Helped develop specifications for projects alongside senior mechanical engineers.</li>
+            <li>Worked cross discipline with electrical, civil, and architectural engineers.</li>
+            <li>Worked with vendors to size and select equipment.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <h3 class="font-heading font-semibold text-lg">Product Design Intern, Cummins Inc. &ndash; Minneapolis, MN</h3>
+          <p class="text-gray-400 text-sm mb-3">May 2017 &ndash; Aug 2017</p>
+          <ul class="bullet-mark text-gray-600 space-y-2 text-[15px] leading-relaxed">
+            <li>Led the endurance testing for a RV Engine Generator.</li>
+            <li>Assisted in testing and design decisions.</li>
+            <li>Shadowed senior engineers throughout the design process.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
-    <section id="projects" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">Projects</h2>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Corn Maze Rake</h3>
-        <p>Designed a pull behind rake for a skid steer loader to knock down dirt piles generated by the tracks while turning. Utilized back of the napkin calculations and drawings to then work with a welder to make a finished product.</p>
-      </div>
-      <div class="mb-6">
-        <h3 class="text-xl font-semibold text-gray-100">Amateur Game Design</h3>
-        <p>Design, prototype, and program basic software and board games in my free time to hone my programming skills and keep the creative juices flowing.</p>
+    <section id="education" class="max-w-5xl mx-auto px-6 py-20 reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">Education</p>
+      <h2 class="font-heading text-2xl sm:text-3xl font-bold mb-4">Education</h2>
+      <p class="text-gray-600 text-lg">Cedarville University &ndash; Bachelor of Science in Mechanical Engineering, May 2019</p>
+    </section>
+
+    <section id="projects" class="max-w-5xl mx-auto px-6 py-20 reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">Projects</p>
+      <h2 class="font-heading text-2xl sm:text-3xl font-bold mb-10">Things I've Built</h2>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all">
+          <h3 class="font-heading font-semibold text-lg mb-2">Corn Maze Rake</h3>
+          <p class="text-gray-600 text-[15px] leading-relaxed">Designed a pull behind rake for a skid steer loader to knock down dirt piles generated by the tracks while turning. Utilized back of the napkin calculations and drawings to then work with a welder to make a finished product.</p>
+        </div>
+        <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all">
+          <h3 class="font-heading font-semibold text-lg mb-2">Amateur Game Design</h3>
+          <p class="text-gray-600 text-[15px] leading-relaxed">Design, prototype, and program basic software and board games in my free time to hone my programming skills and keep the creative juices flowing.</p>
+        </div>
       </div>
     </section>
 
-    <section id="contact" class="container mx-auto my-8">
-      <h2 class="text-3xl font-bold text-gray-100 mb-4">Contact</h2>
-      <p><i class="fas fa-envelope mr-2"></i>Email: <a href="mailto:bennettstouffer@gmail.com" class="text-blue-500 hover:underline">bennettstouffer@gmail.com</a></p>
+    <section id="contact" class="max-w-5xl mx-auto px-6 py-24 text-center reveal">
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-3">Contact</p>
+      <h2 class="font-heading text-3xl sm:text-4xl font-bold mb-8">Let's Connect</h2>
+      <a href="mailto:bennettstouffer@gmail.com" class="inline-flex items-center gap-2 bg-ink text-white font-semibold text-sm py-3 px-8 rounded-full hover:bg-accent transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        bennettstouffer@gmail.com
+      </a>
     </section>
   </main>
 
-  <footer class="bg-gray-800 text-white text-center p-4 mt-8">
-    © Bennett Stouffer. All rights reserved.
+  <footer class="border-t border-gray-100 text-center text-gray-400 text-sm py-8">
+    &copy; Bennett Stouffer. All rights reserved.
   </footer>
 
   <script src="/js/scripts.js"></script>
